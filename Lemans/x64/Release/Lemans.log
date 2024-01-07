@@ -1,0 +1,3 @@
+﻿  main.cpp
+LİNK : fatal error C1047: '.\..\..\lib\ICBYTESx64Release.lib' nesne veya kitaplık dosyası, derleyicinin 'x64\Release\main.obj' gibi diğer nesnelerden farklı bir sürümü tarafından oluşturuldu; tüm nesneleri ve kitaplıkları aynı derleyici ile yeniden derleyin
+LINK : fatal error LNK1257: Kod üretme başarısız oldu
