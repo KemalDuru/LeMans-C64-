@@ -7,4 +7,4 @@ ICBYTESx64Release.lib(icbytes.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release
 ICBYTESx64Release.lib(ic_media.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release.lib(ic_media.obj)' ile veya '' üzerinde bulunamadı; nesne, hata ayıklama bilgileri yokmuş gibi bağlanıyor
 ICBYTESx64Release.lib(icb_gui.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release.lib(icb_gui.obj)' ile veya '' üzerinde bulunamadı; nesne, hata ayıklama bilgileri yokmuş gibi bağlanıyor
 ICBYTESx64Release.lib(jpgd.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release.lib(jpgd.obj)' ile veya '' üzerinde bulunamadı; nesne, hata ayıklama bilgileri yokmuş gibi bağlanıyor
-  Lemans.vcxproj -> C:\Users\kduru\Documents\GitHub\LeMans\Lemans\x64\Release\Lemans.exe
+  Lemans.vcxproj -> C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\x64\Release\Lemans.exe
