@@ -3,7 +3,7 @@
 #include"ic_image.h"
 
 ICBYTES OyunAlaný,FULSCREEN;
-ICBYTES Fullmap, map,Araba,Araba2;
+ICBYTES Fullmap, map,Araba,ArabaMain;
 int FRM,keyboard;
 int botSpeed = 1;
 int mapSpeed = 1;
@@ -33,15 +33,15 @@ void bot0() {
 	int car1onRoad = 0;
 	if (bot0Turn == 0) {
 		Cars[0].coorX = 500;
-		Cars[0].coorY = 200;
+		Cars[0].coorY = 100;
 	}
 	else if (botSpeed > 0) {
-		Cars[0].coorX = 600;
-		Cars[0].coorY = 50;
+		Cars[0].coorX = 500;
+		Cars[0].coorY = 5;
 	}
 	else if (botSpeed <= 0) {
-		Cars[0].coorX = 600;
-		Cars[0].coorY = 600;
+		Cars[0].coorX = 500;
+		Cars[0].coorY = 620;
 	}
 
 	while (true) {
@@ -52,7 +52,7 @@ void bot0() {
 			car1onRoad = OyunAlaný.U(Cars[0].coorX + 72, Cars[0].coorY);
 			if (car1onRoad == -11580063)
 			{
-				Cars[0].coorX += 1;
+				Cars[0].coorX += 5;
 			}
 			else
 			{
@@ -66,7 +66,7 @@ void bot0() {
 			car1onRoad = OyunAlaný.U(Cars[0].coorX - 6, Cars[0].coorY);
 			if (car1onRoad == -11580063)
 			{
-				Cars[0].coorX -= 1;
+				Cars[0].coorX -= 5;
 			}
 			else
 			{
@@ -85,13 +85,34 @@ void bot0() {
 			Cars[0].coorY += botSpeed;
 		}
 
-		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
-		if (Cars[0].coorY <= 20 || Cars[0].coorY >= 650) {
-			bot0Turn += 1;
+		
+		if (Cars[0].coorY >= 650) {
+			
+			bot0Turn = 1;
+			for (int i = 0; i < Araba.DataLen(); i++)
+			{
+				Copy(Araba, 1, 1, Araba.X(), Araba.Y()-i, Araba);
+				PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
+				Sleep(10);
+			}
+			
+			break;
+			
+		}
+
+		if (Cars[0].coorY <= 5) {
+			
+			for (int i = 0; i < Araba.DataLen(); i++)
+			{
+				Copy(Araba, 1, 1, Araba.X(), Araba.Y() - i, Araba);
+				PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
+				Sleep(10);
+			}
+			bot0Turn = 1;
 			break;
 		}
 		
-		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
+		//PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
 		if (Cars[0].coorY + 104 >= ArabaMainYcor && Cars[0].coorY <= ArabaMainYcor) {
 			if (Cars[0].coorX + 70 >= ArabaMainXcor && Cars[0].coorX <= ArabaMainXcor) {
 				mapSpeed = 1;
@@ -102,86 +123,11 @@ void bot0() {
 		Sleep(10);
 	}
 	Sleep(1000);
+	ReadImage("ferrari.bmp", Araba);
 	botThread0();
 	}
 	
-/*void bot1() {
-	//botlar
-	int car1onRoad = 0;
-	if (bot1Turn == 0) {
-		Cars[1].coorX = 400;
-		Cars[1].coorY = 50;
-	}
-	else if (botSpeed > 0) {
-		Cars[1].coorX = 300;
-		Cars[1].coorY = 50;
-	}
-	else if (botSpeed <= 0) {
-		Cars[1].coorX = 300;
-		Cars[1].coorY = 600;
-	}
 
-	while (true) {
-
-
-		if (Cars[1].isleft == 0)
-			//Saða gidiyorsa
-		{
-			car1onRoad = OyunAlaný.U(Cars[1].coorX + 72, Cars[1].coorY);
-			if (car1onRoad == -11580063)
-			{
-				Cars[1].coorX += 1;
-			}
-			else
-			{
-				Cars[1].isleft = 1;
-			}
-		}
-
-		if (Cars[1].isleft == 1)
-			//Sola gidiyorsa
-		{
-			car1onRoad = OyunAlaný.U(Cars[1].coorX - 6, Cars[1].coorY);
-			if (car1onRoad == -11580063)
-			{
-				Cars[1].coorX -= 1;
-			}
-			else
-			{
-				Cars[1].isleft = 0;
-			}
-		}
-
-		if (car1onRoad == -9781712) {
-			//bot yoldan çýkmýþ þekilde spawn olmuþsa
-
-			Cars[1].coorX = 500;
-		}
-
-		if (Cars[1].coorY < 650)
-		{
-			Cars[1].coorY += botSpeed;
-		}
-		
-		PasteNon0(Araba, Cars[1].coorX, Cars[1].coorY, OyunAlaný);
-		if (Cars[1].coorY <= 20 || Cars[1].coorY >= 650) {
-			bot1Turn += 1;
-			break;
-		}
-
-		Sleep(10);
-
-
-	}
-	Sleep(1000);
-	botThread1();
-}
-
-void botThread1() {
-	DWORD dw;
-	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
-}
-*/
 void botThread0() {
 	DWORD dw;
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
@@ -193,8 +139,8 @@ void GamePlay(void*)
 	int MapXcor = 1, MapYcor = 5400;
 	int Car1Xcor = 500, Car1Ycor = 200;
 	ReadImage("pist.bmp", Fullmap);
-	ReadImage("Araba.bmp", Araba);
-	ReadImage("f1.bmp", Araba2);
+	ReadImage("ferrari.bmp", Araba);
+	ReadImage("mc.bmp", ArabaMain);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
 	//CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 
@@ -204,13 +150,12 @@ void GamePlay(void*)
 		//Map ve Yarýþcýmýz burda çizdiriliyor.
 		Copy(Fullmap, MapXcor, MapYcor, 999, 799, map);
 		PasteNon0(map, 1, 1, OyunAlaný);
-		PasteNon0(Araba2, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
-		
+		PasteNon0(ArabaMain, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
+		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
 
 		//tuþ kontrolü
 		keyboard = ICG_LastKeyPressed();
 		
-
 
 #ifdef _DEBUG
 		Sleep(20);//DEBUG MODU YAVAÞ OLDUÐU ÝÇÝN DAHA AZ BEKLETÝYORUZ
@@ -224,9 +169,8 @@ void GamePlay(void*)
 		DisplayImage(FRM, OyunAlaný);
 		
 		MapYcor -= mapSpeed;
-		i++;
-		if (i >= 540  ) {
-			MapYcor = 5400; i = 0;
+		if (MapYcor <= 10  ) {
+			MapYcor = 5399; i = 0;
 		}
 	}
 }
@@ -239,10 +183,10 @@ void WhenKeyPressed(int k)
 	int keyboard2 = k;
 
 	if (keyboard == 39) {//sað ok tuþuna basýldýysa //IF RIGHT ARROW KEY PRESSED
-		ArabaMainXcor += 5;
+		ArabaMainXcor += 15;
 	}
 	else if (keyboard == 37) {//sol ok tuþuna basýldýysa//IF LEFT ARROW KEY PRESSED
-		ArabaMainXcor -= 5;
+		ArabaMainXcor -= 15;
 	}
 	else if (keyboard2 == 38) {// Yukari yon tusuna basilinca
 		if (botSpeed < 3) {
@@ -254,7 +198,7 @@ void WhenKeyPressed(int k)
 	}
 	else if (keyboard2 == 40) {
 		mapSpeed = 10;
-		if (botSpeed > -3) {
+		if (botSpeed >= -3 && botSpeed < 1) {
 			botSpeed -= 1;
 		}
 	}

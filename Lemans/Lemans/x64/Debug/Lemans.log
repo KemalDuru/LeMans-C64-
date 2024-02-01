@@ -1,3 +1,2 @@
 ﻿  main.cpp
-C:\Users\kduru\Documents\GitHub\LeMans\Lemans\Lemans\main.cpp(78,8): warning C4101: 'dw': yerel değişken başvurusu kaldırıldı
-  Lemans.vcxproj -> C:\Users\kduru\Documents\GitHub\LeMans\Lemans\x64\Debug\Lemans.exe
+  Lemans.vcxproj -> C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\x64\Debug\Lemans.exe
