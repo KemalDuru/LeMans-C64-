@@ -19,6 +19,7 @@ struct forThreads {
 	int coorX=500;
 	int coorY=100;
 	int isleft = 0;
+	int isforward = 0;
 };
 struct forThreads Cars[4];
 
@@ -29,8 +30,13 @@ void ICGUI_Create()
 }
 
 void bot0() {
+	
 	//botlar
 	int car1onRoad = 0;
+
+	
+
+
 	if (bot0Turn == 0) {
 		Cars[0].coorX = 500;
 		Cars[0].coorY = 100;
@@ -46,8 +52,29 @@ void bot0() {
 
 	while (true) {
 
+		//Bot öne mi gidiyor arkaya mý ?
+		if (mapSpeed >= 15 && mapSpeed <= 25)
+		{
+			botSpeed = 1;
+		}
+		else if (mapSpeed >= 25)
+		{
+			botSpeed = 2;
+		}
+		else if (mapSpeed <= 15)
+		{
+			botSpeed = 0;
+		}
+		else if (mapSpeed <= 10)
+		{
+			botSpeed = -1;
+		}
+
+
+
+		//Saða gidiyorsa
 		if (Cars[0].isleft == 0)
-			//Saða gidiyorsa
+			
 		{
 			car1onRoad = OyunAlaný.U(Cars[0].coorX + 72, Cars[0].coorY);
 			if (car1onRoad == -11580063)
@@ -59,9 +86,9 @@ void bot0() {
 				Cars[0].isleft = 1;
 			}
 		}
-
+		//Sola gidiyorsa
 		if (Cars[0].isleft == 1)
-			//Sola gidiyorsa
+			
 		{
 			car1onRoad = OyunAlaný.U(Cars[0].coorX - 6, Cars[0].coorY);
 			if (car1onRoad == -11580063)
@@ -73,19 +100,20 @@ void bot0() {
 				Cars[0].isleft = 0;
 			}
 		}
-
+		//bot yoldan çýkmýþ þekilde spawn olmuþsa
 		if (car1onRoad == -9781712) {
-			//bot yoldan çýkmýþ þekilde spawn olmuþsa
+			
 
 			Cars[0].coorX = 500;
 		}
-		
+		//bot yönü 
 		if (Cars[0].coorY < 650)
 		{
 			Cars[0].coorY += botSpeed;
 		}
 
-		
+
+		//Botun alttan çýkýþ iþlemleri
 		if (Cars[0].coorY >= 650) {
 			
 			bot0Turn = 1;
@@ -99,7 +127,7 @@ void bot0() {
 			break;
 			
 		}
-
+		//Botun üstten çýkýþ iþlemleri
 		if (Cars[0].coorY <= 5) {
 			
 			for (int i = 0; i < Araba.DataLen(); i++)
@@ -112,7 +140,7 @@ void bot0() {
 			break;
 		}
 		
-		//PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
+		//Çarpýþma durumlarý
 		if (Cars[0].coorY + 104 >= ArabaMainYcor && Cars[0].coorY <= ArabaMainYcor) {
 			if (Cars[0].coorX + 70 >= ArabaMainXcor && Cars[0].coorX <= ArabaMainXcor) {
 				mapSpeed = 1;
@@ -185,21 +213,19 @@ void WhenKeyPressed(int k)
 	if (keyboard == 39) {//sað ok tuþuna basýldýysa //IF RIGHT ARROW KEY PRESSED
 		ArabaMainXcor += 15;
 	}
-	else if (keyboard == 37) {//sol ok tuþuna basýldýysa//IF LEFT ARROW KEY PRESSED
+	if (keyboard == 37) {//sol ok tuþuna basýldýysa//IF LEFT ARROW KEY PRESSED
 		ArabaMainXcor -= 15;
 	}
-	else if (keyboard2 == 38) {// Yukari yon tusuna basilinca
-		if (botSpeed < 3) {
-			botSpeed += 1;
-		}
+	if (keyboard2 == 38) {// Yukari yon tusuna basilinca
+		
 		if (mapSpeed <= 30) {
-			mapSpeed += 1;
+			mapSpeed += 2;
 		}
 	}
-	else if (keyboard2 == 40) {
-		mapSpeed = 10;
-		if (botSpeed >= -3 && botSpeed < 1) {
-			botSpeed -= 1;
+	if (keyboard2 == 40) {
+		
+		if (mapSpeed >= 10) {
+			mapSpeed -= 2;
 		}
 	}
 

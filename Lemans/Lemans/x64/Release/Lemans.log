@@ -1,8 +1,8 @@
 ﻿  main.cpp
-C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(94,43): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(94,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(107,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(107,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(122,43): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(122,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(135,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(135,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
   ICBYTESx64Release.lib(icbytes.obj) : /GL ile derlenmiş MSIL .netmodule veya modül bulundu; bağlantı /LTCG ile yeniden başlatılıyor; bağlayıcı performansını artırmak için bağlantı komut satırına /LTCG ekleyin
 LINK : warning LNK4098: defaultlib 'LIBCMT' diğer kitaplıkların kullanımı ile çakışıyor; /NODEFAULTLIB:library kullanın
   Kod üretiliyor
