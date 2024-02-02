@@ -2,14 +2,16 @@
 #include"icb_gui.h"
 #include"ic_image.h"
 
-ICBYTES OyunAlaný,FULSCREEN;
-ICBYTES Fullmap, map,Araba,ArabaMain;
-int FRM,keyboard;
+ICBYTES OyunAlaný,InfoAlaný;
+ICBYTES Fullmap, map,Araba,ArabaMain,SText,SýralamaText;
+int FRM,FRM2,keyboard;
 int botSpeed = 1;
-int mapSpeed = 1;
+int mapSpeed = 1,speedText,SýraText;
 int ArabaMainXcor =500, ArabaMainYcor = 450;
 int bot0Turn = 0;
 int bot1Turn = 0;
+int fullScreenX=1200,FullscreenY=800;
+int startGame = 0;
 
 void botThread0();
 void botThread1();
@@ -23,19 +25,18 @@ struct forThreads {
 };
 struct forThreads Cars[4];
 
-
 void ICGUI_Create()
 {
-	ICG_MWSize(1200, 900);
+	ICG_MWSize(fullScreenX, FullscreenY);
+	ICG_MWTitle("Le Mans");
+	ICG_MWColor(50, 150, 80);
+	ICG_MWPosition(150, 1);
 }
 
 void bot0() {
 	
 	//botlar
 	int car1onRoad = 0;
-
-	
-
 
 	if (bot0Turn == 0) {
 		Cars[0].coorX = 500;
@@ -55,22 +56,35 @@ void bot0() {
 		//Bot öne mi gidiyor arkaya mý ?
 		if (mapSpeed >= 15 && mapSpeed <= 25)
 		{
-			botSpeed = 1;
+			botSpeed = 1;	
 		}
 		else if (mapSpeed >= 25)
 		{
 			botSpeed = 2;
-		}
-		else if (mapSpeed <= 15)
-		{
-			botSpeed = 0;
+			
 		}
 		else if (mapSpeed <= 10)
 		{
+			botSpeed = -2;	
+		}
+		else if (mapSpeed <= 15)
+		{	
 			botSpeed = -1;
 		}
 
+		if (ArabaMainYcor == Cars[0].coorY)
+		{
+			if (botSpeed < 0)
+			{
+				SýralamaText = "Arkadan geldi ve bot geçti";
+			}
+			else if (botSpeed > 0)
+			{
+				SýralamaText = "Bizim araba Botu geçti";
+			}
+		}
 
+		
 
 		//Saða gidiyorsa
 		if (Cars[0].isleft == 0)
@@ -102,7 +116,6 @@ void bot0() {
 		}
 		//bot yoldan çýkmýþ þekilde spawn olmuþsa
 		if (car1onRoad == -9781712) {
-			
 
 			Cars[0].coorX = 500;
 		}
@@ -112,14 +125,13 @@ void bot0() {
 			Cars[0].coorY += botSpeed;
 		}
 
-
 		//Botun alttan çýkýþ iþlemleri
-		if (Cars[0].coorY >= 650) {
+		if (Cars[0].coorY >= 640) {
 			
 			bot0Turn = 1;
 			for (int i = 0; i < Araba.DataLen(); i++)
 			{
-				Copy(Araba, 1, 1, Araba.X(), Araba.Y()-i, Araba);
+				Copy(Araba, 1, 1, Araba.X(), Araba.Y() -i, Araba);
 				PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
 				Sleep(10);
 			}
@@ -154,8 +166,42 @@ void bot0() {
 	ReadImage("ferrari.bmp", Araba);
 	botThread0();
 	}
-	
 
+void InfoScreens() {
+
+	while (startGame == 1 )
+	{
+		
+		//Speed Text 
+		if (mapSpeed >= 25 && mapSpeed <= 29)
+		{
+			SText = "300";
+		}
+		else if (mapSpeed > 29)
+		{
+			SText = "350";
+		}
+		else if (mapSpeed >= 20 && mapSpeed < 25)
+		{
+			SText = "250";
+		}
+		else if (mapSpeed >= 15 && mapSpeed < 20)
+		{
+			SText = "200";
+		}
+		else if (mapSpeed >= 10 && mapSpeed < 15)
+		{	
+			SText = "150";
+		}
+		else if (mapSpeed <= 10)
+		{
+			SText = "100";
+		}
+		Sleep(100);
+	}
+	
+}
+	
 void botThread0() {
 	DWORD dw;
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
@@ -164,22 +210,24 @@ void botThread0() {
 void GamePlay(void*)
 {
 	DWORD dw;
+	startGame = 1;
 	int MapXcor = 1, MapYcor = 5400;
 	int Car1Xcor = 500, Car1Ycor = 200;
 	ReadImage("pist.bmp", Fullmap);
 	ReadImage("ferrari.bmp", Araba);
 	ReadImage("mc.bmp", ArabaMain);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
-	//CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
-
+	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)InfoScreens, NULL, 0, &dw);
 	int i = 0;
 	while (true)
 	{
 		//Map ve Yarýþcýmýz burda çizdiriliyor.
-		Copy(Fullmap, MapXcor, MapYcor, 999, 799, map);
+		Copy(Fullmap, MapXcor, MapYcor, 1001, 750, map);
 		PasteNon0(map, 1, 1, OyunAlaný);
 		PasteNon0(ArabaMain, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
 		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
+		SetText(speedText, SText);
+		SetText(SýraText, SýralamaText);
 
 		//tuþ kontrolü
 		keyboard = ICG_LastKeyPressed();
@@ -210,21 +258,31 @@ void WhenKeyPressed(int k)
 	keyboard = k;
 	int keyboard2 = k;
 
-	if (keyboard == 39) {//sað ok tuþuna basýldýysa //IF RIGHT ARROW KEY PRESSED
+	if (keyboard == 39) 
+	{
+		//sað ok tuþuna basýldýysa //IF RIGHT ARROW KEY PRESSED
+
 		ArabaMainXcor += 15;
 	}
-	if (keyboard == 37) {//sol ok tuþuna basýldýysa//IF LEFT ARROW KEY PRESSED
+	if (keyboard == 37) 
+	{
+		//sol ok tuþuna basýldýysa//IF LEFT ARROW KEY PRESSED
+
 		ArabaMainXcor -= 15;
 	}
-	if (keyboard2 == 38) {// Yukari yon tusuna basilinca
-		
-		if (mapSpeed <= 30) {
+	if (keyboard2 == 38) 
+	{
+		// Yukari yon tusuna basilinca
+		if (mapSpeed <= 30) 
+		{
 			mapSpeed += 2;
 		}
 	}
-	if (keyboard2 == 40) {
-		
-		if (mapSpeed >= 10) {
+	if (keyboard2 == 40) 
+	{
+		// Assagi yon tusuna basilinca
+		if (mapSpeed >= 10) 
+		{
 			mapSpeed -= 2;
 		}
 	}
@@ -234,10 +292,17 @@ void WhenKeyPressed(int k)
 
 void ICGUI_main()
 {
-	CreateImage(OyunAlaný, 1000, 800, ICB_UINT);
+
+	CreateImage(OyunAlaný, 1000, 749, ICB_UINT);
+	CreateImage(InfoAlaný, 200, 749, ICB_UINT);
 	OyunAlaný = 0xffffff;
-	FRM = ICG_FrameMedium(25, 25, 1200, 1000);
+	InfoAlaný = 0x22ff22;
+	FRM = ICG_FrameThin(0, 0, 1200, 749);
+	FRM2 = ICG_FrameThin(1001, 0, 200, 749);
 	DisplayImage(FRM, OyunAlaný);
+	DisplayImage(FRM2, InfoAlaný);
+	speedText = ICG_SLEdit(1050, 150, 100, 55, "Speed:");
+	SýraText = ICG_SLEdit(1050, 350, 200, 55, "Speed:");
 	ICG_TButton(1050, 50, 100, 55, "Start", GamePlay, NULL);
 	ICG_SetOnKeyPressed(WhenKeyPressed);
 

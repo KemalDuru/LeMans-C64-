@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Lemans",
+    "\\Lemans\\Lemans"
   ],
-  "SelectedNode": "\\Lemans.sln (Lemans\\Lemans.sln)",
+  "SelectedNode": "\\Lemans\\Lemans\\main.cpp",
   "PreviewInSolutionExplorer": false
 }
