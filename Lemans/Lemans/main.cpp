@@ -3,7 +3,7 @@
 #include"ic_image.h"
 
 ICBYTES OyunAlaný,InfoAlaný;
-ICBYTES Fullmap, map,Araba,ArabaMain,SText,SýralamaText;
+ICBYTES Fullmap, map,Araba,Araba1,ArabaMain,SText,SýralamaText;
 int FRM,FRM2,keyboard;
 int botSpeed = 1;
 int mapSpeed = 15,speedText,SýraText;
@@ -19,8 +19,8 @@ void botThread1();
 
 struct forThreads {
 	//int threadNumber;
-	int coorX=500;
-	int coorY=100;
+	int coorX;
+	int coorY;
 	int isleft = 0;
 	int isforward = 0;
 };
@@ -29,7 +29,7 @@ struct forThreads Cars[4];
 void ICGUI_Create()
 {
 	ICG_MWSize(fullScreenX, FullscreenY);
-	ICG_MWTitle("Le Mans");
+	//ICG_MWTitle("LeMans");
 	ICG_MWColor(50, 150, 80);
 	ICG_MWPosition(150, 1);
 }
@@ -38,7 +38,6 @@ void bot0() {
 	
 	//botlar
 	int car1onRoad = 0;
-
 	if (bot0Turn == 0) {
 		Cars[0].coorX = 500;
 		Cars[0].coorY = 100;
@@ -51,7 +50,8 @@ void bot0() {
 		Cars[0].coorX = 500;
 		Cars[0].coorY = 620;
 	}
-
+	
+	ReadImage("ferrari.bmp", Araba);
 	while (true) {
 
 		//Bot öne mi gidiyor arkaya mý ?
@@ -127,15 +127,13 @@ void bot0() {
 			Cars[0].coorY += botSpeed;
 		}
 
-		//Botun alttan çýkýþ iþlemleri
+		//Botun alttan çýkýþ iþlemleris
 		if (Cars[0].coorY >= 640) {
 			
 			bot0Turn = 1;
 			for (int i = 0; i < Araba.DataLen(); i++)
 			{
 				Copy(Araba, 1, 1, Araba.X(), Araba.Y() -i, Araba);
-				PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
-				Sleep(10);
 			}
 			
 			break;
@@ -143,13 +141,12 @@ void bot0() {
 		}
 		//Botun üstten çýkýþ iþlemleri
 		if (Cars[0].coorY <= 5) {
-			
+		
 			for (int i = 0; i < Araba.DataLen(); i++)
 			{
 				Copy(Araba, 1, 1, Araba.X(), Araba.Y() - i, Araba);
-				PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
-				Sleep(10);
 			}
+			
 			bot0Turn = 1;
 			break;
 		}
@@ -166,8 +163,130 @@ void bot0() {
 		Sleep(10);
 	}
 	Sleep(1000);
-	ReadImage("ferrari.bmp", Araba);
+	
 	botThread0();
+	}
+
+
+	//bot2
+	void bot1() {
+
+		//botlar
+		int car1onRoad = 0;
+		if (bot1Turn == 0) {
+			Cars[1].coorX = 700;
+			Cars[1].coorY = 300;
+		}
+		else if (botSpeed > 0) {
+			Cars[1].coorX = 500;
+			Cars[1].coorY = 5;
+		}
+		else if (botSpeed <= 0) {
+			Cars[1].coorX = 500;
+			Cars[1].coorY = 620;
+		}
+
+		ReadImage("aston.bmp", Araba1);
+		while (true) {
+
+			//Bot öne mi gidiyor arkaya mý ?
+			if (mapSpeed > 15 && mapSpeed <= 25)
+			{
+				botSpeed = 1;
+			}
+			else if (mapSpeed == 15) {
+				botSpeed = 0;
+			}
+			else if (mapSpeed >= 25)
+			{
+				botSpeed = 4;
+			}
+			else if (mapSpeed <= 8)
+			{
+				botSpeed = -4;
+			}
+			else if (mapSpeed < 15)
+			{
+				botSpeed = -3;
+			}
+
+
+			//Saða gidiyorsa
+			if (Cars[1].isleft == 0)
+
+			{
+				car1onRoad = OyunAlaný.U(Cars[1].coorX + 72, Cars[1].coorY);
+				if (car1onRoad == -11580063)
+				{
+					Cars[1].coorX += 2;
+				}
+				else
+				{
+					Cars[1].isleft = 1;
+				}
+			}
+			//Sola gidiyorsa
+			if (Cars[1].isleft == 1)
+
+			{
+				car1onRoad = OyunAlaný.U(Cars[1].coorX - 6, Cars[1].coorY);
+				if (car1onRoad == -11580063)
+				{
+					Cars[1].coorX -= 2;
+				}
+				else
+				{
+					Cars[1].isleft = 0;
+				}
+			}
+			//bot yoldan çýkmýþ þekilde spawn olmuþsa
+			if (car1onRoad == -9781712) {
+
+				Cars[1].coorX = 500;
+			}
+			//bot yönü 
+			if (Cars[1].coorY < 650)
+			{
+				Cars[1].coorY += botSpeed;
+			}
+
+			//Botun alttan çýkýþ iþlemleris
+			if (Cars[1].coorY >= 640) {
+
+				bot1Turn = 1;
+				for (int i = 0; i < Araba1.DataLen(); i++)
+				{
+					Copy(Araba1, 1, 1, Araba1.X(), Araba1.Y() - i, Araba1);
+				}
+
+				break;
+
+			}
+			//Botun üstten çýkýþ iþlemleri
+			if (Cars[1].coorY <= 5) {
+
+				for (int i = 0; i < Araba1.DataLen(); i++)
+				{
+					Copy(Araba1, 1, 1, Araba1.X(), Araba1.Y() - i, Araba1);
+				}
+
+				bot1Turn = 1;
+				break;
+			}
+
+			//Çarpýþma durumlarý
+			if (Cars[1].coorY + 104 >= ArabaMainYcor && Cars[1].coorY <= ArabaMainYcor) {
+				if (Cars[1].coorX + 70 >= ArabaMainXcor && Cars[1].coorX <= ArabaMainXcor) {
+					mapSpeed = 8;
+					botSpeed = -2;
+					carCrash = 1;
+				}
+			}
+
+			Sleep(10);
+		}
+		Sleep(1000);
+		botThread1();
 	}
 
 void InfoScreens() {
@@ -200,6 +319,7 @@ void InfoScreens() {
 		{
 			SText = "100";
 		}
+		
 		Sleep(100);
 	}
 	
@@ -208,6 +328,10 @@ void InfoScreens() {
 void botThread0() {
 	DWORD dw;
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
+}
+void botThread1() {
+	DWORD dw;
+	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 }
 
 void GamePlay(void*)
@@ -218,8 +342,10 @@ void GamePlay(void*)
 	int Car1Xcor = 500, Car1Ycor = 200;
 	ReadImage("Anapist.bmp", Fullmap);
 	ReadImage("ferrari.bmp", Araba);
+	ReadImage("aston.bmp", Araba1);
 	ReadImage("mc.bmp", ArabaMain);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
+	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)InfoScreens, NULL, 0, &dw);
 	int i = 0;
 	while (true)
@@ -229,6 +355,7 @@ void GamePlay(void*)
 		PasteNon0(map, 1, 1, OyunAlaný);
 			PasteNon0(ArabaMain, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
 		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
+		PasteNon0(Araba1, Cars[1].coorX, Cars[1].coorY, OyunAlaný);
 		SetText(speedText, SText);
 		SetText(SýraText, SýralamaText);
 
