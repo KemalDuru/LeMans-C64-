@@ -1,2 +1,9 @@
 ﻿  main.cpp
-  Lemans.vcxproj -> C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\x64\Debug\Lemans.exe
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(31,2): error C2664: 'void ICG_MWTitle(const TCHAR *)' : 1 bağımsız değişkeni 'const char [8]' değerinden 'const TCHAR *' değerine dönüştürülemez
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(31,14): message : İşaretlenen türler ilgisiz; dönüştürme reinterpret_cast, C stili tür dönüştürme veya parantez içine alınmış işlev stili tür dönüştürme gerektiriyor
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\include\icb_gui.h(21,6): message : 'ICG_MWTitle' bildirimine bakın
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(31,2): message : '(const char [8])' bağımsız değişken listesi eşlenmeye çalışılırken
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(134,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(134,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(147,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(147,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
