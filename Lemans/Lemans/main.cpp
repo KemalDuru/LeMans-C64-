@@ -340,20 +340,20 @@ void GamePlay(void*)
 	startGame = 1;
 	int MapXcor = 1, MapYcor = 12000;
 	int Car1Xcor = 500, Car1Ycor = 200;
-	ReadImage("Anapist.bmp", Fullmap);
+	int carMainRenk;
+	ReadImage("pist.bmp", Fullmap);
 	ReadImage("ferrari.bmp", Araba);
 	ReadImage("aston.bmp", Araba1);
 	ReadImage("mc.bmp", ArabaMain);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)InfoScreens, NULL, 0, &dw);
-	int i = 0;
 	while (true)
 	{
 		//Map ve Yarýþcýmýz burda çizdiriliyor.
 		Copy(Fullmap, MapXcor, MapYcor, 1001, 750, map);
 		PasteNon0(map, 1, 1, OyunAlaný);
-			PasteNon0(ArabaMain, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
+		PasteNon0(ArabaMain, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
 		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
 		PasteNon0(Araba1, Cars[1].coorX, Cars[1].coorY, OyunAlaný);
 		SetText(speedText, SText);
@@ -362,11 +362,43 @@ void GamePlay(void*)
 		//tuþ kontrolü
 		keyboard = ICG_LastKeyPressed();
 		
+		//pit kontorlleri
 		if (MapYcor > 200 && MapYcor < 250) {
 			if (ArabaMainXcor > 120 && ArabaMainXcor < 380) {
 				carCrash = 0;
 			}
 		}
+
+		//Main yarýþcýmýzýn yol kontrolü 
+		carMainRenk = OyunAlaný.U(ArabaMainXcor+30 , ArabaMainYcor );
+
+		if (carMainRenk != -11580063 &&  carMainRenk != -14069100 && carMainRenk != -5376)
+		{
+			if (carMainRenk == -9211520)
+			{
+				if (mapSpeed >= 20)
+				{
+					mapSpeed = 19;
+				}
+				
+			}
+			else if (carMainRenk == -1 || carMainRenk == -2677467)
+			{
+				if (mapSpeed >= 30)
+				{
+					mapSpeed = 25;
+				}
+
+			}
+			else {
+				
+				mapSpeed = 5;
+
+			}
+
+		}
+
+
 #ifdef _DEBUG
 		Sleep(20);//DEBUG MODU YAVAÞ OLDUÐU ÝÇÝN DAHA AZ BEKLETÝYORUZ
 #else
@@ -374,13 +406,13 @@ void GamePlay(void*)
 #endif
 		int nextPixel = OyunAlaný.U(ArabaMainXcor,300);
 		if (nextPixel == 0x6abe30) {
-			PasteNon0(Araba, 100, 100, OyunAlaný);
+			//PasteNon0(Araba, 100, 100, OyunAlaný);
 		}
 		DisplayImage(FRM, OyunAlaný);
 		
 		MapYcor -= mapSpeed;
-		if (MapYcor <= 10  ) {
-			MapYcor = 12000; i = 0;
+		if (MapYcor <= 1  ) {
+			MapYcor = 12050;
 		}
 	}
 }
@@ -420,7 +452,24 @@ void WhenKeyPressed(int k)
 			mapSpeed -= 1;
 		}
 	}
+	
+	
+	//space tuþu renk kontrolü  11580063 asfalt 9211520 kýrmýzý 2677467 beyaz 9211520 pitasfalt 
+	/*if (keyboard == 32 )
+	{
+		carMainRenk = 0;
+		carMainRenk = OyunAlaný.U(ArabaMainXcor - 2, ArabaMainYcor -2);
 
+	}*/
+
+}
+
+void StartScreen() {
+
+	while (true) {
+
+
+	}
 }
 
 
@@ -434,6 +483,9 @@ void ICGUI_main()
 	FRM = ICG_FrameThin(0, 0, 1200, 749);
 	FRM2 = ICG_FrameThin(1001, 0, 200, 749);
 	DisplayImage(FRM, OyunAlaný);
+
+	//StartScreen();
+
 	DisplayImage(FRM2, InfoAlaný);
 	speedText = ICG_SLEdit(1050, 150, 100, 55, "Speed:");
 	SýraText = ICG_SLEdit(1050, 350, 200, 55, "Speed:");

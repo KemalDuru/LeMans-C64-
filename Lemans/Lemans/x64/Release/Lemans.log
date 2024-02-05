@@ -1,12 +1,12 @@
 ﻿  main.cpp
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(136,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(136,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(147,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(147,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(259,48): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(259,33): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(270,48): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
-C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(270,33): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(136,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(136,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(147,44): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(147,30): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(259,48): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(259,33): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(270,48): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\Lemans\main.cpp(270,33): warning C4244: 'bağımsız değişken': '__int64' - 'int' dönüşümü; veri kaybı olabilir
   ICBYTESx64Release.lib(icbytes.obj) : /GL ile derlenmiş MSIL .netmodule veya modül bulundu; bağlantı /LTCG ile yeniden başlatılıyor; bağlayıcı performansını artırmak için bağlantı komut satırına /LTCG ekleyin
 LINK : warning LNK4098: defaultlib 'LIBCMT' diğer kitaplıkların kullanımı ile çakışıyor; /NODEFAULTLIB:library kullanın
   Kod üretiliyor
@@ -15,4 +15,4 @@ ICBYTESx64Release.lib(icbytes.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release
 ICBYTESx64Release.lib(ic_media.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release.lib(ic_media.obj)' ile veya '' üzerinde bulunamadı; nesne, hata ayıklama bilgileri yokmuş gibi bağlanıyor
 ICBYTESx64Release.lib(icb_gui.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release.lib(icb_gui.obj)' ile veya '' üzerinde bulunamadı; nesne, hata ayıklama bilgileri yokmuş gibi bağlanıyor
 ICBYTESx64Release.lib(jpgd.obj) : warning LNK4099: PDB '', 'ICBYTESx64Release.lib(jpgd.obj)' ile veya '' üzerinde bulunamadı; nesne, hata ayıklama bilgileri yokmuş gibi bağlanıyor
-  Lemans.vcxproj -> C:\Users\Alperen SAÇINTI\Documents\GitHub\LeMans-C64-\Lemans\x64\Release\Lemans.exe
+  Lemans.vcxproj -> C:\Users\kduru\Documents\GitHub\LeMans-C64-\Lemans\x64\Release\Lemans.exe
