@@ -1,18 +1,23 @@
 #include<windows.h>
 #include"icb_gui.h"
 #include"ic_image.h"
+#include <time.h>
 
+HANDLE hTimerQueue = NULL;
 ICBYTES OyunAlaný,InfoAlaný;
-ICBYTES Fullmap, map,Araba,Araba1,ArabaMain,SText,SýralamaText;
+ICBYTES Fullmap, map,Araba,Araba1,ArabaMain,SText,SýralamaText,tText;
 int FRM,FRM2,keyboard;
 int botSpeed = 1;
-int mapSpeed = 15,speedText,SýraText;
+int mapSpeed = 15,speedText,SýraText,timeText,highScore;
 int ArabaMainXcor =500, ArabaMainYcor = 450;
 int bot0Turn = 0;
 int bot1Turn = 0;
 int fullScreenX=1200,FullscreenY=800;
 int startGame = 0;
 int carCrash = 0;
+int score = 0;
+int timer = 120;
+int carPassed = 0;
 
 void botThread0();
 void botThread1();
@@ -23,8 +28,24 @@ struct forThreads {
 	int coorY;
 	int isleft = 0;
 	int isforward = 0;
+
 };
 struct forThreads Cars[4];
+
+void scoreFunction(void* p)
+{
+	SetText(SýraText, SýralamaText);
+	ICG_printf(SýraText, "%d", *(int*)p);
+}
+void setTime(void* p) {
+	SetText(timeText, tText);
+	ICG_printf(timeText, "%d", *(int*)p);
+}
+void timeFunction() {
+	timer -= 1;
+	setTime((void*)&timer);
+}
+
 
 void ICGUI_Create()
 {
@@ -75,15 +96,23 @@ void bot0() {
 			botSpeed = -3;
 		}
 
-		if (ArabaMainYcor == Cars[0].coorY)
+		if (ArabaMainYcor <= Cars[0].coorY && ArabaMainYcor + 3 >= Cars[0].coorY)
 		{
 			if (botSpeed < 0)
 			{
-				SýralamaText = "Arkadan geldi ve bot geçti";
+				//SýralamaText = "Arkadan geldi ve bot geçti";
 			}
 			else if (botSpeed > 0)
 			{
-				SýralamaText = "Bizim araba Botu geçti";
+				//SýralamaText = "Geçtin";
+				score += 10;
+				carPassed += 1;
+				if (carPassed >= 3) {
+					score += 30;
+					carPassed = carPassed % 3;
+				}
+				scoreFunction((void*)&score);
+
 			}
 		}
 
@@ -152,10 +181,9 @@ void bot0() {
 		}
 		
 		//Çarpýþma durumlarý
-		if (Cars[0].coorY + 104 >= ArabaMainYcor && Cars[0].coorY <= ArabaMainYcor) {
-			if (Cars[0].coorX + 70 >= ArabaMainXcor && Cars[0].coorX <= ArabaMainXcor) {
-				mapSpeed = 8;
-				botSpeed = -2;
+		if (Cars[0].coorY + 70 >= ArabaMainYcor && Cars[0].coorY <= ArabaMainYcor) {
+			if (Cars[0].coorX + 60 >= ArabaMainXcor && Cars[0].coorX <= ArabaMainXcor) {
+				mapSpeed = 15;
 				carCrash = 1;
 			}
 		}
@@ -210,6 +238,23 @@ void bot0() {
 				botSpeed = -3;
 			}
 
+			if (ArabaMainYcor <= Cars[1].coorY && ArabaMainYcor +3 >= Cars[1].coorY)
+			{
+				if (botSpeed < 0)
+				{
+					//SýralamaText = "Arkadan geldi ve bot geçti";
+				}
+				else if (botSpeed > 0)
+				{
+					score += 10;
+					carPassed += 1;
+					if (carPassed >= 3) {
+						score += 30;
+						carPassed = carPassed % 3;
+					}
+					scoreFunction((void*)&score);
+				}
+			}
 
 			//Saða gidiyorsa
 			if (Cars[1].isleft == 0)
@@ -275,10 +320,9 @@ void bot0() {
 			}
 
 			//Çarpýþma durumlarý
-			if (Cars[1].coorY + 104 >= ArabaMainYcor && Cars[1].coorY <= ArabaMainYcor) {
-				if (Cars[1].coorX + 70 >= ArabaMainXcor && Cars[1].coorX <= ArabaMainXcor) {
-					mapSpeed = 8;
-					botSpeed = -2;
+			if (Cars[1].coorY + 70 >= ArabaMainYcor && Cars[1].coorY <= ArabaMainYcor) {
+				if (Cars[1].coorX + 60 >= ArabaMainXcor && Cars[1].coorX <= ArabaMainXcor) {
+					mapSpeed = 15;
 					carCrash = 1;
 				}
 			}
@@ -319,7 +363,6 @@ void InfoScreens() {
 		{
 			SText = "100";
 		}
-		
 		Sleep(100);
 	}
 	
@@ -333,10 +376,17 @@ void botThread1() {
 	DWORD dw;
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 }
-
 void GamePlay(void*)
 {
+	HANDLE hTimer = NULL;
 	DWORD dw;
+	hTimerQueue = CreateTimerQueue();
+	if (NULL == hTimerQueue)
+	{
+		return;
+	}
+	CreateTimerQueueTimer(&hTimer, hTimerQueue, (WAITORTIMERCALLBACK)timeFunction, NULL, 0, 1000, 0);
+	
 	startGame = 1;
 	int MapXcor = 1, MapYcor = 12000;
 	int Car1Xcor = 500, Car1Ycor = 200;
@@ -345,9 +395,14 @@ void GamePlay(void*)
 	ReadImage("ferrari.bmp", Araba);
 	ReadImage("aston.bmp", Araba1);
 	ReadImage("mc.bmp", ArabaMain);
+
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)InfoScreens, NULL, 0, &dw);
+	PlaySound("Opening.wav", NULL, SND_ASYNC | SND_LOOP);
+	
+	
+
 	while (true)
 	{
 		//Map ve Yarýþcýmýz burda çizdiriliyor.
@@ -357,7 +412,6 @@ void GamePlay(void*)
 		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
 		PasteNon0(Araba1, Cars[1].coorX, Cars[1].coorY, OyunAlaný);
 		SetText(speedText, SText);
-		SetText(SýraText, SýralamaText);
 
 		//tuþ kontrolü
 		keyboard = ICG_LastKeyPressed();
@@ -398,12 +452,12 @@ void GamePlay(void*)
 
 		}
 
-
 #ifdef _DEBUG
 		Sleep(20);//DEBUG MODU YAVAÞ OLDUÐU ÝÇÝN DAHA AZ BEKLETÝYORUZ
 #else
 		Sleep(60); //Release mode is fast so we delay more
 #endif
+
 		int nextPixel = OyunAlaný.U(ArabaMainXcor,300);
 		if (nextPixel == 0x6abe30) {
 			//PasteNon0(Araba, 100, 100, OyunAlaný);
@@ -441,7 +495,7 @@ void WhenKeyPressed(int k)
 		// Yukari yon tusuna basilinca
 		if (mapSpeed <= 30) 
 		{
-			mapSpeed += 1;
+			mapSpeed += 2;
 		}
 	}
 	if (keyboard2 == 40 && carCrash != 1)
@@ -449,7 +503,7 @@ void WhenKeyPressed(int k)
 		// Assagi yon tusuna basilinca
 		if (mapSpeed >= 10) 
 		{
-			mapSpeed -= 1;
+			mapSpeed -= 2;
 		}
 	}
 	
@@ -468,10 +522,8 @@ void StartScreen() {
 
 	while (true) {
 
-
 	}
 }
-
 
 void ICGUI_main()
 {
@@ -479,16 +531,17 @@ void ICGUI_main()
 	CreateImage(OyunAlaný, 1000, 749, ICB_UINT);
 	CreateImage(InfoAlaný, 200, 749, ICB_UINT);
 	OyunAlaný = 0xffffff;
-	InfoAlaný = 0x22ff22;
 	FRM = ICG_FrameThin(0, 0, 1200, 749);
 	FRM2 = ICG_FrameThin(1001, 0, 200, 749);
 	DisplayImage(FRM, OyunAlaný);
-
+	ReadImage("scoreboard.bmp", InfoAlaný);
 	//StartScreen();
 
 	DisplayImage(FRM2, InfoAlaný);
+	highScore = ICG_SLEdit(1050, 600, 100, 55, "HighScore:");
+	timeText = ICG_SLEdit(1050, 500, 100, 55, "Time:");
 	speedText = ICG_SLEdit(1050, 150, 100, 55, "Speed:");
-	SýraText = ICG_SLEdit(1050, 350, 200, 55, "Speed:");
+	SýraText = ICG_SLEditSunken(1050, 350, 100, 55, "Score:");
 	ICG_TButton(1050, 50, 100, 55, "Start", GamePlay, NULL);
 	ICG_SetOnKeyPressed(WhenKeyPressed);
 
