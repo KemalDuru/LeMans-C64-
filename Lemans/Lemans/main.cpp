@@ -5,7 +5,7 @@
 
 HANDLE hTimerQueue = NULL;
 ICBYTES OyunAlaný,InfoAlaný;
-ICBYTES Fullmap, map,Araba,Araba1,ArabaMain,SText,SýralamaText,tText;
+ICBYTES Fullmap, map,Araba,Araba1,ArabaMain,SText,SýralamaText,tText,infoCar,tempInfo;
 int FRM,FRM2,keyboard;
 int botSpeed = 1;
 int mapSpeed = 15,speedText,SýraText,timeText,highScore;
@@ -107,10 +107,20 @@ void bot0() {
 				//SýralamaText = "Geçtin";
 				score += 10;
 				carPassed += 1;
+				timer += 2;
 				if (carPassed >= 3) {
 					score += 30;
 					carPassed = carPassed % 3;
+					PasteNon0(infoCar, 120, 450, InfoAlaný);
 				}
+				else if (carPassed == 2) {
+					PasteNon0(infoCar, 80, 450, InfoAlaný);
+				}
+				else if (carPassed == 1) {
+					PasteNon0(tempInfo, 1, 1, InfoAlaný);
+					PasteNon0(infoCar, 40, 450, InfoAlaný);
+				}
+				DisplayImage(FRM2, InfoAlaný);
 				scoreFunction((void*)&score);
 
 			}
@@ -183,12 +193,12 @@ void bot0() {
 		//Çarpýþma durumlarý
 		if (Cars[0].coorY + 70 >= ArabaMainYcor && Cars[0].coorY <= ArabaMainYcor) {
 			if (Cars[0].coorX + 60 >= ArabaMainXcor && Cars[0].coorX <= ArabaMainXcor) {
-				mapSpeed = 15;
+				mapSpeed = 14;
 				carCrash = 1;
 			}
 		}
 		
-		Sleep(10);
+		Sleep(20);
 	}
 	Sleep(1000);
 	
@@ -246,12 +256,25 @@ void bot0() {
 				}
 				else if (botSpeed > 0)
 				{
+
 					score += 10;
 					carPassed += 1;
+					timer += 2;
 					if (carPassed >= 3) {
 						score += 30;
 						carPassed = carPassed % 3;
+						PasteNon0(infoCar, 120, 450, InfoAlaný);
+
 					}
+					else if (carPassed == 2) {
+						PasteNon0(infoCar, 80, 450, InfoAlaný);
+					}
+					else if (carPassed == 1) {
+						PasteNon0(tempInfo, 1, 1, InfoAlaný);
+						PasteNon0(infoCar, 40, 450, InfoAlaný);
+					}
+					DisplayImage(FRM2, InfoAlaný);
+
 					scoreFunction((void*)&score);
 				}
 			}
@@ -322,7 +345,7 @@ void bot0() {
 			//Çarpýþma durumlarý
 			if (Cars[1].coorY + 70 >= ArabaMainYcor && Cars[1].coorY <= ArabaMainYcor) {
 				if (Cars[1].coorX + 60 >= ArabaMainXcor && Cars[1].coorX <= ArabaMainXcor) {
-					mapSpeed = 15;
+					mapSpeed = 14;
 					carCrash = 1;
 				}
 			}
@@ -334,7 +357,7 @@ void bot0() {
 	}
 
 void InfoScreens() {
-
+	PasteNon0(tempInfo, 1, 1, InfoAlaný);
 	while (startGame == 1 )
 	{
 		
@@ -376,6 +399,9 @@ void botThread1() {
 	DWORD dw;
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 }
+
+
+
 void GamePlay(void*)
 {
 	HANDLE hTimer = NULL;
@@ -391,18 +417,17 @@ void GamePlay(void*)
 	int MapXcor = 1, MapYcor = 12000;
 	int Car1Xcor = 500, Car1Ycor = 200;
 	int carMainRenk;
-	ReadImage("pist.bmp", Fullmap);
+	ReadImage("pistsonbibak.bmp", Fullmap);
 	ReadImage("ferrari.bmp", Araba);
 	ReadImage("aston.bmp", Araba1);
 	ReadImage("mc.bmp", ArabaMain);
+	
 
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)InfoScreens, NULL, 0, &dw);
 	PlaySound("Opening.wav", NULL, SND_ASYNC | SND_LOOP);
 	
-	
-
 	while (true)
 	{
 		//Map ve Yarýþcýmýz burda çizdiriliyor.
@@ -418,7 +443,7 @@ void GamePlay(void*)
 		
 		//pit kontorlleri
 		if (MapYcor > 200 && MapYcor < 250) {
-			if (ArabaMainXcor > 120 && ArabaMainXcor < 380) {
+			if (ArabaMainXcor > 70 && ArabaMainXcor < 380) {
 				carCrash = 0;
 			}
 		}
@@ -528,21 +553,22 @@ void StartScreen() {
 void ICGUI_main()
 {
 
+	ReadImage("passed.bmp", infoCar);
 	CreateImage(OyunAlaný, 1000, 749, ICB_UINT);
 	CreateImage(InfoAlaný, 200, 749, ICB_UINT);
 	OyunAlaný = 0xffffff;
 	FRM = ICG_FrameThin(0, 0, 1200, 749);
 	FRM2 = ICG_FrameThin(1001, 0, 200, 749);
 	DisplayImage(FRM, OyunAlaný);
-	ReadImage("scoreboard.bmp", InfoAlaný);
+	ReadImage("scoreboardy.bmp", tempInfo);
 	//StartScreen();
-
 	DisplayImage(FRM2, InfoAlaný);
-	highScore = ICG_SLEdit(1050, 600, 100, 55, "HighScore:");
-	timeText = ICG_SLEdit(1050, 500, 100, 55, "Time:");
-	speedText = ICG_SLEdit(1050, 150, 100, 55, "Speed:");
-	SýraText = ICG_SLEditSunken(1050, 350, 100, 55, "Score:");
-	ICG_TButton(1050, 50, 100, 55, "Start", GamePlay, NULL);
+
+	highScore = ICG_SLEdit(1068, 128, 68, 26, "");
+	timeText = ICG_SLEdit(1068, 285, 68, 26, "");
+	speedText = ICG_SLEdit(1068, 205, 68, 26, "");
+	SýraText = ICG_SLEditSunken(1068, 367, 68, 26, "");
+	ICG_TButton(1050, 20, 100, 55, "Start", GamePlay, NULL);
 	ICG_SetOnKeyPressed(WhenKeyPressed);
 
 }
