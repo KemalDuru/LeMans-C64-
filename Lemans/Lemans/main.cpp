@@ -5,7 +5,7 @@
 
 HANDLE hTimerQueue = NULL;
 ICBYTES OyunAlaný,InfoAlaný;
-ICBYTES Fullmap, map,Araba,Araba1,ArabaMain,SText,SýralamaText,tText,infoCar,tempInfo;
+ICBYTES Fullmap, map,Araba,Araba1,ArabaMain,SText,SýralamaText,tText,infoCar,tempInfo,crashedCar;
 int FRM,FRM2,keyboard;
 int botSpeed = 1;
 int mapSpeed = 15,speedText,SýraText,timeText,highScore;
@@ -16,7 +16,7 @@ int fullScreenX=1200,FullscreenY=800;
 int startGame = 0;
 int carCrash = 0;
 int score = 0;
-int timer = 120;
+int timer = 15;
 int carPassed = 0;
 
 void botThread0();
@@ -191,8 +191,12 @@ void bot0() {
 		}
 		
 		//Çarpýþma durumlarý
-		if (Cars[0].coorY + 70 >= ArabaMainYcor && Cars[0].coorY <= ArabaMainYcor) {
-			if (Cars[0].coorX + 60 >= ArabaMainXcor && Cars[0].coorX <= ArabaMainXcor) {
+		if (Cars[0].coorY + 100 >= ArabaMainYcor && Cars[0].coorY <= ArabaMainYcor) {
+			if (Cars[0].coorX + 70 >= ArabaMainXcor && Cars[0].coorX <= ArabaMainXcor) {
+				if (carCrash == 0) {
+					PlaySound("carCrash.wav", NULL, SND_SYNC);
+					PlaySound("brokenEngine.wav", NULL, SND_ASYNC | SND_LOOP);
+				}
 				mapSpeed = 14;
 				carCrash = 1;
 			}
@@ -343,8 +347,12 @@ void bot0() {
 			}
 
 			//Çarpýþma durumlarý
-			if (Cars[1].coorY + 70 >= ArabaMainYcor && Cars[1].coorY <= ArabaMainYcor) {
-				if (Cars[1].coorX + 60 >= ArabaMainXcor && Cars[1].coorX <= ArabaMainXcor) {
+			if (Cars[1].coorY + 100 >= ArabaMainYcor && Cars[1].coorY <= ArabaMainYcor) {
+				if (Cars[1].coorX + 70 >= ArabaMainXcor && Cars[1].coorX <= ArabaMainXcor) {
+					if (carCrash == 0) {
+						PlaySound("carCrash.wav", NULL, SND_SYNC);
+						PlaySound("brokenEngine.wav", NULL, SND_ASYNC | SND_LOOP);
+					}
 					mapSpeed = 14;
 					carCrash = 1;
 				}
@@ -421,19 +429,25 @@ void GamePlay(void*)
 	ReadImage("ferrari.bmp", Araba);
 	ReadImage("aston.bmp", Araba1);
 	ReadImage("mc.bmp", ArabaMain);
+	ReadImage("araba.bmp", crashedCar);
 	
 
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot0, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)bot1, NULL, 0, &dw);
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)InfoScreens, NULL, 0, &dw);
-	PlaySound("Opening.wav", NULL, SND_ASYNC | SND_LOOP);
+	PlaySound("Speed.wav", NULL, SND_ASYNC | SND_LOOP);
 	
-	while (true)
+	while (timer >0)
 	{
 		//Map ve Yarýþcýmýz burda çizdiriliyor.
 		Copy(Fullmap, MapXcor, MapYcor, 1001, 750, map);
 		PasteNon0(map, 1, 1, OyunAlaný);
-		PasteNon0(ArabaMain, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
+		if (carCrash == 0) {
+			PasteNon0(ArabaMain, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
+		}
+		else if (carCrash == 1) {
+			PasteNon0(crashedCar, ArabaMainXcor, ArabaMainYcor, OyunAlaný);
+		}
 		PasteNon0(Araba, Cars[0].coorX, Cars[0].coorY, OyunAlaný);
 		PasteNon0(Araba1, Cars[1].coorX, Cars[1].coorY, OyunAlaný);
 		SetText(speedText, SText);
@@ -445,6 +459,7 @@ void GamePlay(void*)
 		if (MapYcor > 200 && MapYcor < 250) {
 			if (ArabaMainXcor > 70 && ArabaMainXcor < 380) {
 				carCrash = 0;
+				PlaySound("Speed.wav", NULL, SND_ASYNC | SND_LOOP);
 			}
 		}
 
@@ -494,6 +509,8 @@ void GamePlay(void*)
 			MapYcor = 12050;
 		}
 	}
+	PlaySound("gameOver.wav", NULL, SND_ASYNC | SND_LOOP);
+
 }
 
 
@@ -545,14 +562,11 @@ void WhenKeyPressed(int k)
 
 void StartScreen() {
 
-	while (true) {
-
-	}
 }
 
 void ICGUI_main()
 {
-
+	PlaySound("opening.wav", NULL, SND_ASYNC | SND_LOOP);
 	ReadImage("passed.bmp", infoCar);
 	CreateImage(OyunAlaný, 1000, 749, ICB_UINT);
 	CreateImage(InfoAlaný, 200, 749, ICB_UINT);
